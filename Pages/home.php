@@ -46,25 +46,19 @@
                     ?>
             </div>
         </nav>
-            <table class="menu-table">
-                <tr>
-                    <th>Name</th>
-                    <th>Picture</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                </tr>
-                <?php
-                    while($row = $data->fetch(PDO::FETCH_ASSOC)){
-                ?>
-                    <tr>
-                        <td><?= $row['nama']?></td>
-                        <td><img src="./../Src/Makanan/<?= $row['gambar']?>" alt="gambar pizza" style="width: 100px"></td>
-                        <td><?= $row['harga']?></td>
-                        <td><?= $row['kategori']?></td>
-                        <td><?= $row['deskripsi']?></td>
-                    </tr>
-                <?php } ?>
-            </table>
+        <div class="card-container">
+            <?php
+                while($row = $data->fetch(PDO::FETCH_ASSOC)){
+            ?>
+                <div class="card">
+                    <h2><?= $row['nama']?></h2>
+                    <img src="./../Src/Makanan/<?= $row['gambar']?>" alt="picture of menu">
+                    <p class="price">$<?= $row['harga']?></p>
+                    <p class="category"><?= $row['kategori']?></p>
+                    <p class='description'><?= $row['deskripsi']?></p>
+                    <button>Add to cart +</button>
+                </div>
+            <?php } ?>
+        </div>
     </body>
 </html>

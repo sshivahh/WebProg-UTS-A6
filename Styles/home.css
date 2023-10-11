@@ -1,3 +1,7 @@
+*{
+    font-family:Arial, Helvetica, sans-serif;
+}
+
 body{
     background-color: #98f4dc;
 }
@@ -11,6 +15,7 @@ nav{
     width: 100vw;
     display: flex;
     justify-content: space-between;
+    z-index: 1;
 }
 
 .logo, .search-bar, .profile{
@@ -83,11 +88,64 @@ nav{
     scale: 1.03;
 }
 
-.menu-table{
-    margin-top: 120px;
-    height: 100%;
+.card-container{
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+    margin: 150px auto;
+    width: fit-content;
 }
 
-table, th, td {
-    border: 1px solid black;
+.card{
+    background-color: white;
+    width: 200px;
+    height: 300px;
+    padding: 40px 30px;
+    margin: 10px;
+    border-radius: 30px;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 0px 30px 20px -5px rgba(0, 0, 0,0.3);
+    position: relative ;
+}
+
+.card > img{
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    margin: 10px 10px 30px 10px;
+    text-align: center;
+}
+
+.card > h2{
+    font-weight: bold;
+    margin: 0px;
+}
+
+.card > h2, .card > p {
+    text-align: center;
+    margin: 0px;
+}
+
+.card>p{
+    opacity: 0.5;
+}
+
+.card>button{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 20px;
+    background-color: #d6eadf;
+    width: 100px;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.price{
+    font-weight: bold;
+    font-size: 1.5rem;
 }
