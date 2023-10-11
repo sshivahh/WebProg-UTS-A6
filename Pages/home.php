@@ -52,9 +52,9 @@
             ?>
                 <div class="card">
                     <h2><?= $row['nama']?></h2>
+                    <p class="category"><?= $row['kategori']?></p>
                     <img src="./../Src/Makanan/<?= $row['gambar']?>" alt="picture of menu">
                     <p class="price">$<?= $row['harga']?></p>
-                    <p class="category"><?= $row['kategori']?></p>
                     <p class='description'><?= $row['deskripsi']?></p>
                     <button>Add to cart +</button>
                 </div>

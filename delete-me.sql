@@ -36,7 +36,7 @@ INSERT INTO menu(nama, gambar, harga, kategori, deskripsi) VALUES
 ("Cherry Martini", "/Drinks/Cherry_Martini.jpg", 20, "Drinks", "Gin, vermouth, and cherry"),
 ("Piña Colada", "/Drinks/Piña_Colada.jpg", 15, "Drinks", "Pineapple juice, rum, and coconut"),
 ("Honey Bourbon", "/Drinks/Honey_Bourbon.jpg", 25, "Drinks", " Fermented mash of grain, yeast, honey, and water"),
-("Köstlicher_Whiskey", "/Drinks/Köstlicher_Whiskey.jpg", 14, "Drinks", "Fermented grain mash"),
+("Köstlicher Whiskey", "/Drinks/Köstlicher_Whiskey.jpg", 14, "Drinks", "Fermented grain mash"),
 ("Bloody Mary", "/Drinks/Bloody_Mary.jpg", 12, "Drinks", "Vodka, tomato juice, Worcestershire sauce, black pepper, celery salt, Tabasco and lemon juice"),
 ("Wine Dharma", "/Drinks/Wine_Dharma.jpg", 20, "Drinks", "Wine and yeast fermented grape"),
 ("Daiquiri", "/Drinks/Daiquiri.jpg", 12, "Drinks", "Rum, lime juice, and simple syrup"),
