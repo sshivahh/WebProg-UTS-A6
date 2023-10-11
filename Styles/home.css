@@ -1,2 +1,93 @@
 body{
+    background-color: #98f4dc;
+}
+
+nav{
+    background-color: white;
+    box-shadow: 0px 0px 20px -10px black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo, .search-bar, .profile{
+    padding: 10px 20px;
+}
+
+.logo{
+    display: flex;
+}
+
+.logo-blue{
+    color: #849ccc;
+}
+
+.search-bar{
+    display: flex;
+    align-items: center;
+}
+
+.search-bar > input{
+    background-color: #d8deee;
+    color: #8d919c;
+    border: none;
+    width: 300px;
+    height: 35px;
+    padding: 0px 20px;
+    margin: 0px 10px;
+    border-radius: 10px;
+}
+
+.search-bar > input::placeholder{
+    font-weight: bold;
+}
+
+.search-bar > button{
+    background-color: #d8deee;
+    border: none;
+    height: 35px;
+    width: 35px;
+    border-radius: 5px;
+    transition: 150ms;
+}
+
+.search-bar > button:hover{
+    filter: brightness(90%);
+    scale: 1.03;
+}
+
+.search-bar >button>img{
+    width: 100%;
+}
+
+.profile{
+    display: flex;
+    align-items: center;
+}
+
+.login-button{
+    background-color: #d8deee;
+    font-weight: bold;
+    border: none;
+    height: 35px;
+    width: 100px;
+    border-radius: 5px;
+    transition: 150ms;
+}
+
+.login-button:hover{
+    filter: brightness(90%);
+    scale: 1.03;
+}
+
+.menu-table{
+    margin-top: 120px;
+    height: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
 }
