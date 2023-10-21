@@ -2,10 +2,11 @@ CREATE DATABASE database_webprog_lec;
 
 USE database_webprog_lec;
 
-CREATE TABLE users(
-    id int PRIMARY KEY,
-    username varchar(25),
-    password varchar(25)
+create table users(
+    id int auto_increment PRIMARY KEY,
+    fullname varchar(50) not null,
+    email varchar(25)  not null ,
+    password varchar(25) not null
 );
 
 CREATE TABLE menu(
