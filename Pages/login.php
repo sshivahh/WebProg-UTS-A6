@@ -4,7 +4,7 @@ session_start();
 $hostname = "localhost";
 $user = "root";
 $pass = "";
-$db_name = "database_webprog_lec";
+$db_name = "database_uts_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
 
@@ -30,6 +30,7 @@ if (isset($_POST['submit'])) {
 <head>
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdHR74oAAAAAEF8qCHk_2Yb0rneP6-P86leisri" async defer></script>
     <title>Login</title>
 </head>
     <style>
