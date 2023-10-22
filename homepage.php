@@ -77,6 +77,16 @@
         .small-box img {
             margin-left: 9px;
         }
+        .text_kanan {
+            position: absolute;
+            top: 0px;
+            right: 20px;
+            font-size: 24px;
+            color: #000;
+            text-align: center;
+            margin-right: 20px;
+            margin-top: -5px;
+        }
     </style>
 </head>
 <body>
@@ -92,12 +102,15 @@
             <div class="small-box" onclick="handleSmallBoxClick()">
                 <img src="asset_makanan/Search.png" alt="Cari">
             </div>
+            <div class="text_kanan">
+                <p>Order#123</p>
+                <p style="margin-top: -20px; font-size: 20px;">Opened 21:00</p>
+            </div>
         </div>
     </div>
 
     <script>
         function handleSmallBoxClick() {
-            
             var smallBox = document.querySelector(".small-box");
             smallBox.style.transform = "scale(0.9)"; //ngubah ukuran search
             setTimeout(function () {
