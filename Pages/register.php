@@ -31,7 +31,7 @@
 $hostname = "localhost";
 $user = "root";
 $pass = "";
-$db_name = "database_uts_lec";
+$db_name = "database_webprog_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
 
