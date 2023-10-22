@@ -31,38 +31,63 @@
 $hostname = "localhost";
 $user = "root";
 $pass = "";
-$db_name = "database_webprog_lec";
+$db_name = "database_uts_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
 
+// $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+// curl_setopt($ch, CURLOPT_POST, true);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, [
+//     'secret' => '6LcuUr4oAAAAAPA-GlqMIzklwWK1V2dfN6Dxntoa',
+//     'response' => $_POST['g-recaptcha-response'],
+// ]);
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $response = curl_exec($ch);
+// $result = json_decode($response);
+// return $result->success;
+
 if (isset($_POST['submit'])) {
+    //menghindari sql injection
     $name = mysqli_real_escape_string($koneksi, $_POST['name']);
     $email = mysqli_real_escape_string($koneksi, $_POST['email']);
-    $password = mysqli_real_escape_string($koneksi, $_POST['password']);
+    $password = $_POST['password'];
 
-    // Periksa apakah email sudah terdaftar
-    $cek_user = mysqli_query($koneksi, "SELECT * FROM users WHERE email = '$email'");
-    $cek_login = mysqli_num_rows($cek_user);
+    $recaptchaSecretKey = "6LcuUr4oAAAAAPA-GlqMIzklwWK1V2dfN6Dxntoa";
+    $recaptchaResponse = $_POST['g-recaptcha-response'];
+    $recaptchaVerify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecretKey&response=$recaptchaResponse");
+    $recaptchaData = json_decode($recaptchaVerify);
+    
+    if ($recaptchaData->success) {
+        // Periksa apakah email sudah terdaftar
+        $cek_user = mysqli_query($koneksi, "SELECT * FROM users WHERE email = '$email'");
+        $cek_login = mysqli_num_rows($cek_user);
 
-    if ($cek_login > 0) {
-        echo "<script>
-            alert('Email telah terdaftar');
-            window.location = 'register.php';
-        </script>";
-    } else {
-        // Simpan data ke dalam tabel "users"
-        $query = "INSERT INTO users (fullname, email, password) VALUES ('$name', '$email', '$password')";
-        if (mysqli_query($koneksi, $query)) {
+        if ($cek_login > 0) {
             echo "<script>
-                alert('Data berhasil didaftarkan');
-                window.location = 'login.php';
+                alert('Email telah terdaftar');
+                window.location = 'register.php';
             </script>";
         } else {
-            echo "Error: " . $query . "<br>" . mysqli_error($koneksi);
+            // encrypt password
+            $en_pass = password_hash($password, PASSWORD_BCRYPT);
+            // simpan data ke dalam tabel "users"
+            $query = "INSERT INTO users (fullname, email, password) VALUES ('$name', '$email', '$en_pass')";
+            if (mysqli_query($koneksi, $query)) {
+                echo "<script>
+                    alert('Data berhasil didaftarkan');
+                    window.location = 'login.php';
+                </script>";
+            } else {
+                echo "Error: " . $query . "<br>" . mysqli_error($koneksi);
+            }
         }
+    } else {
+        echo "<script>
+            alert('reCAPTCHA verification failed');
+            window.location = 'register.php';
+        </script>";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +96,8 @@ if (isset($_POST['submit'])) {
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-</head>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdHR74oAAAAAEF8qCHk_2Yb0rneP6-P86leisri" async defer></script>
     <style>
         html, body {
             margin: 0;
@@ -230,6 +256,18 @@ if (isset($_POST['submit'])) {
 
     </style>
 </head>
+<script>
+function onClick(e) {
+  e.preventDefault();
+  grecaptcha.enterprise.ready(async () => {
+    const token = await grecaptcha.enterprise.execute('6LcuUr4oAAAAAENMXP_sMx33LgjnZJCcIJwVzYkU', {action: 'LOGIN'});
+    // IMPORTANT: The 'token' that results from execute is an encrypted response sent by
+    // reCAPTCHA Enterprise to the end user's browser.
+    // This token must be validated by creating an assessment.
+    // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+  });
+}
+</script>
 <body>
     <div class="container">
         <div class="content-left">
@@ -271,6 +309,8 @@ if (isset($_POST['submit'])) {
                     <p style="color: #8692A6; font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
                         already have account? click <a href="login.php">here</a>
                     </p>
+                    <div class="g-recaptcha" data-sitekey="6LcuUr4oAAAAAENMXP_sMx33LgjnZJCcIJwVzYkU"></div>
+                    <br />
                     <div class="button-container">
                         <button type="submit" name="submit" value="signup">Register Account</button>
                     </div>
