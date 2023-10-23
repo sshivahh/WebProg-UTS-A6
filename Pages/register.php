@@ -31,9 +31,22 @@
 $hostname = "localhost";
 $user = "root";
 $pass = "";
-$db_name = "database_uts_lec";
+$db_name = "database_webprog_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
+
+function generateRandomString($length = 6) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
+    }
+    
+    return $randomString;
+}
+
+$randomString = generateRandomString();
 
 // $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
 // curl_setopt($ch, CURLOPT_POST, true);
@@ -52,12 +65,12 @@ if (isset($_POST['submit'])) {
     $email = mysqli_real_escape_string($koneksi, $_POST['email']);
     $password = $_POST['password'];
 
-    $recaptchaSecretKey = "6LcuUr4oAAAAAPA-GlqMIzklwWK1V2dfN6Dxntoa";
-    $recaptchaResponse = $_POST['g-recaptcha-response'];
-    $recaptchaVerify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecretKey&response=$recaptchaResponse");
-    $recaptchaData = json_decode($recaptchaVerify);
+    $captchaString = $_GET['captcha'];
+    $captchaInput = $_POST['captcha-input'];
+
     
-    if ($recaptchaData->success) {
+
+    if ($captchaInput == $captchaString) {
         // Periksa apakah email sudah terdaftar
         $cek_user = mysqli_query($koneksi, "SELECT * FROM users WHERE email = '$email'");
         $cek_login = mysqli_num_rows($cek_user);
@@ -83,7 +96,7 @@ if (isset($_POST['submit'])) {
         }
     } else {
         echo "<script>
-            alert('reCAPTCHA verification failed');
+            alert('CAPTCHA verification failed');
             window.location = 'register.php';
         </script>";
     }
@@ -96,125 +109,8 @@ if (isset($_POST['submit'])) {
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdHR74oAAAAAEF8qCHk_2Yb0rneP6-P86leisri" async defer></script>
+    <link rel="stylesheet" href="./../Styles/register.css">
     <style>
-        html, body {
-            margin: 0;
-            height: 100%;
-        }
-        .container {
-            width: 100%;
-            height: 100%;
-            background-color: #012e41;
-            display: flex;
-        }
-        .content-left {
-            flex: 1;
-        }
-        .content-left img {
-            height: 100%;
-            width: 100%;
-            border-top-right-radius: 40px;
-            border-bottom-right-radius: 40px;
-        }
-        .content-left h3 {
-            position: absolute;
-            font-size: 50px;
-            font-family: Arial, Helvetica, sans-serif;
-            top: 5px;
-            left: 40px;
-            color: #fff;
-            /* opsional */
-            padding: 5px;
-            border-radius: 5px;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .left-text {
-            position: absolute;
-            margin-top: 150px;
-            margin-left: 75px;
-            font-size: 25px;
-            line-height: 1.5;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            color: #fff;
-        }
-        .content-right {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .back-button {
-            position: absolute;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 10px; 
-            top: 20px;
-            left: 960px;
-        }
-        .form-container {
-            text-align: justify;
-            margin: 0 auto; /* untuk memusatkan formulir */
-        }
-        .form-group {
-            margin: 25px 0;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 15px; /*lebar box */
-        }
-        .label {
-            color: #696F79;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .form-group input,
-        .form-group label {
-            height: 20px; /*lebar box pt.2*/
-            border-radius: 5px;
-        }
-        /* button { */
-            /* background-color: #1565D8; button color */
-            /* color: #fff;
-            padding: 12px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 100%;
-        } */
-        .button-container {
-            text-align: center; 
-        }
-
-        button {
-            background-color: #1565D8;
-            color: #fff;
-            padding: 18px; 
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 107%; 
-            display: block;
-        }
-
-        h4 {
-            font-family: Arial, Helvetica, sans-serif;
-            color: #fff;
-            font-size: 35px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-        a:hover {
-            color: white;
-        }
-        
         /*responsif*/
         /* @media screen and (max-width: 768px) {
             .container {
@@ -256,18 +152,6 @@ if (isset($_POST['submit'])) {
 
     </style>
 </head>
-<script>
-function onClick(e) {
-  e.preventDefault();
-  grecaptcha.enterprise.ready(async () => {
-    const token = await grecaptcha.enterprise.execute('6LcuUr4oAAAAAENMXP_sMx33LgjnZJCcIJwVzYkU', {action: 'LOGIN'});
-    // IMPORTANT: The 'token' that results from execute is an encrypted response sent by
-    // reCAPTCHA Enterprise to the end user's browser.
-    // This token must be validated by creating an assessment.
-    // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-  });
-}
-</script>
 <body>
     <div class="container">
         <div class="content-left">
@@ -282,39 +166,42 @@ function onClick(e) {
                 our enchanting city, our restaurant stands as a <br />
                 testament to timeless elegance and epicurean <br />
                 mastery. <br />
-                Richard Paskah✅
+                Richard Paskah
             </div>
-            <img src="asset_register/restaurant.jpeg">
+            <img src="./../Src/Backgrounds/resto.png">
         </div>
         <div class="content-right">
-            <a href="#" class="back-button">&larr; Back</a>
             <div class="form-container">
-                <h4>Register Individual Account!</h4>
-                <p style="color: #8692A6; font-size: 22px; font-family: Arial, Helvetica, sans-serif;">
+                <h4>Register</h4>
+                <p style="color: #8692A6; font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
                     For the purpose of industry regulation, your <br />
                     details are required.</p>
-                    <form action="register.php" method="post" enctype="multipart/form-data">
-                    <label class="label">Your fullname*</label>
+                    <form action="register.php?captcha=<?= $randomString;?>" method="post" enctype="multipart/form-data">
+                    <label class="label">Full Name</label>
                     <div class="form-group">
                         <input type="text" name="name" placeholder="Enter your name" required>
                     </div>
-                    <label class="label">Email Address*</label>
+                    <label class="label">Email Address</label>
                     <div class="form-group">
                         <input type="text" name="email" placeholder="Enter email address" required>
                     </div>
-                    <label class="label">Create Password*</label>
+                    <label class="label">Create Password</label>
                     <div class="form-group">
-                        <input type="password" name="password" placeholder="Enter Password" required>
+                        <input type="password" name="password" placeholder="Enter password" required>
                     </div>
-                    <p style="color: #8692A6; font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
-                        already have account? click <a href="login.php">here</a>
-                    </p>
-                    <div class="g-recaptcha" data-sitekey="6LcuUr4oAAAAAENMXP_sMx33LgjnZJCcIJwVzYkU"></div>
+                    <label class="label" for="">Captcha</label>
+                    <div class="form-group">
+                        <p class="captcha"><?= $randomString;?></p>
+                        <input type="text" name="captcha-input" placeholder="Enter captcha" required>
+                    </div>
                     <br />
                     <div class="button-container">
                         <button type="submit" name="submit" value="signup">Register Account</button>
                     </div>
                 </form>
+                <p style="color: #8692A6; font-size: 13px; font-family: Arial, Helvetica, sans-serif;">
+                    Already have account? <a href="login.php">Log In</a>
+                </p>
             </div>
         </div>
     </div>
