@@ -8,7 +8,12 @@ $db_name = "database_webprog_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
 
+
+
 if (isset($_POST['submit'])) {
+    $captchaString = $_GET['captcha'];
+    $captchaInput = $_POST['captcha-input'];
+    
     $email= mysqli_real_escape_string($koneksi, $_POST['email']);
     $password = mysqli_real_escape_string($koneksi, $_POST['password']);
 
@@ -17,7 +22,7 @@ if (isset($_POST['submit'])) {
 
     $cek_user = password_verify($password, $data['password']);
 
-    if(mysqli_num_rows($temp) > 0 && $cek_user) {
+    if(mysqli_num_rows($temp) > 0 && $cek_user && $captchaString == $captchaInput) {
         //determine whether to assign as user or admin
         if($email == "admin@gmail.com"){
             $_SESSION['admin']['name'] = "Admin";
@@ -29,11 +34,24 @@ if (isset($_POST['submit'])) {
         header("Location: home.php");
     } else {
         echo "<script>
-            alert('Email atau password tidak sesuai atau salah'); 
+            alert('Email, password, atau captcha salah'); 
             window.location = 'login.php';
         </script>";
     }
 }
+
+function generateRandomString($length = 6) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
+    }
+    
+    return $randomString;
+}
+
+$randomString = generateRandomString();
 ?>
 
 <!DOCTYPE html>
@@ -111,13 +129,13 @@ if (isset($_POST['submit'])) {
                 <h4>Log In</h4>
                 <p style="color: #8692A6; font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
                     To begin this journey, let's go login first.</p>
-                    <form action="login.php" method="post" enctype="multipart/form-data">
+                    <form action="login.php?captcha=<?= $randomString;?>" method="post" enctype="multipart/form-data">
                     <?php
                     if (!empty($err)) {
                         echo "<p style='color: red;'>$err</p>";
                     }
                     ?>
-                    <label class="label">Email Address*</label>
+                    <label class="label">Email Address</label>
                     <div class="form-group">
                         <input type="text" name="email" placeholder="Enter email address" required>
                     </div>
@@ -125,6 +143,11 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <input type="password" name="password" placeholder="Enter Password" required>
                     </div>
+                    <label class="label" for="">Captcha</label>
+                    <div class="form-group">
+                        <p class="captcha"><?= $randomString;?></p>
+                        <input type="text" name="captcha-input" placeholder="Enter captcha" required>
+                    </div>  
                     <div class="button-container">
                         <button type="submit" name="submit" value="signin">Continue</button>
                     </div>

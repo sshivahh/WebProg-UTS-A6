@@ -35,19 +35,6 @@ $db_name = "database_webprog_lec";
 
 $koneksi = mysqli_connect($hostname, $user, $pass, $db_name) or die(mysqli_error($koneksi));
 
-function generateRandomString($length = 6) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randomString = '';
-    
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
-    }
-    
-    return $randomString;
-}
-
-$randomString = generateRandomString();
-
 // $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
 // curl_setopt($ch, CURLOPT_POST, true);
 // curl_setopt($ch, CURLOPT_POSTFIELDS, [
@@ -65,12 +52,11 @@ if (isset($_POST['submit'])) {
     $email = mysqli_real_escape_string($koneksi, $_POST['email']);
     $password = $_POST['password'];
 
-    $captchaString = $_GET['captcha'];
-    $captchaInput = $_POST['captcha-input'];
+    
 
     
 
-    if ($captchaInput == $captchaString) {
+    if (1) {
         // Periksa apakah email sudah terdaftar
         $cek_user = mysqli_query($koneksi, "SELECT * FROM users WHERE email = '$email'");
         $cek_login = mysqli_num_rows($cek_user);
@@ -176,10 +162,23 @@ if (isset($_POST['submit'])) {
                 <p style="color: #8692A6; font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
                     For the purpose of industry regulation, your <br />
                     details are required.</p>
-                    <form action="register.php?captcha=<?= $randomString;?>" method="post" enctype="multipart/form-data">
+                    <form action="register.php?" method="post" enctype="multipart/form-data">
                     <label class="label">Full Name</label>
                     <div class="form-group">
                         <input type="text" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <label class="label">Date of Birth</label>
+                    <div class="form-group">
+                        <input type="date" required>
+                    </div>
+                    <label class="label">Gender</label>
+                    <div class="form-group">
+                        <select name="" id="" required>
+                            <option value="">Male</option>
+                            <option value="">Female</option>
+                            <option value="">Other</option>
+                            <option value="">Rather not say</option>
+                        </select>
                     </div>
                     <label class="label">Email Address</label>
                     <div class="form-group">
@@ -188,11 +187,6 @@ if (isset($_POST['submit'])) {
                     <label class="label">Create Password</label>
                     <div class="form-group">
                         <input type="password" name="password" placeholder="Enter password" required>
-                    </div>
-                    <label class="label" for="">Captcha</label>
-                    <div class="form-group">
-                        <p class="captcha"><?= $randomString;?></p>
-                        <input type="text" name="captcha-input" placeholder="Enter captcha" required>
                     </div>
                     <br />
                     <div class="button-container">

@@ -123,7 +123,10 @@
                 <div class="card hidden">
                     <h2><?= $row['nama']?></h2>
                     <p class="category"><?= $row['kategori']?></p>
-                    <img src="./../Src/Makanan/<?= $row['gambar']?>" alt="picture of menu">
+                    <a href="detail.php?id=<?= $row['id']?>" class="detail-link">
+                        <img src="./../Src/Makanan/<?= $row['gambar']?>" alt="picture of menu">
+                    </a>
+                    <div class="floating-div" id="cursor-follower">Click to see detail</div>
                     <p class="price">$<?= $row['harga']?></p>
                     <p class='description'><?= $row['deskripsi']?></p>
                     <a  href="cart.php?id=<?= $row['id'];?>">
